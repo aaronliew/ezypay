@@ -18,6 +18,17 @@ public class Constants {
         public String getType() {
             return type;
         }
+
+        public static boolean isCurrencyTypeValid(String type){
+            String result = "";
+            for (Currency currency : Currency.values()) {
+                if (currency.name().equals(type)){
+                    result = currency.name();
+                    break;
+                }
+            }
+            return result.length() > 0;
+        }
     }
 
     public enum SubCurrency {
@@ -32,11 +43,34 @@ public class Constants {
         public String getType() {
             return type;
         }
+
+        public static boolean isSubCurrencyTypeValid(String type){
+            String result = "";
+            for (SubCurrency subCurrency : SubCurrency.values()) {
+                if (subCurrency.name().equals(type)){
+                    result = subCurrency.name();
+                    break;
+                }
+            }
+            return result.length() > 0;
+        }
     }
 
     public enum SubscriptionType {
         DAILY,
         MONTHLY,
-        WEEKLY
+        WEEKLY;
+
+        public static boolean isSubscriptionTypeValid(String type){
+            String result = "";
+            for (SubscriptionType subscriptionType : SubscriptionType.values()) {
+                if (subscriptionType.name().equals(type)){
+                    result = subscriptionType.name();
+                    break;
+                }
+            }
+            return result.length() > 0;
+        }
+
     }
 }

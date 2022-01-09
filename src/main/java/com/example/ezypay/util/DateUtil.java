@@ -1,6 +1,7 @@
 package com.example.ezypay.util;
 
 import com.example.ezypay.exception.InvalidArgumentException;
+import com.example.ezypay.exception.InvalidDateRangeException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -32,7 +33,7 @@ public class DateUtil {
             Date fromDate = dateFormat.parse(from);
             Date toDate = dateFormat.parse(to);
             if (fromDate.getTime() > toDate.getTime()) {
-                throw new InvalidArgumentException();
+                throw new InvalidDateRangeException();
             }
 
             long diffInMillies = Math.abs(toDate.getTime() - fromDate.getTime());

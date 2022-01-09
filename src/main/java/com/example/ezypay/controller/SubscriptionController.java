@@ -29,23 +29,29 @@ public class SubscriptionController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping("")
     public SubscriptionResponse createSubscription(@RequestBody SubscriptionRequest subscriptionRequest){
         try {
-            log.info(Json.toString(subscriptionRequest));
             validateSubscriptionRequest(subscriptionRequest);
-
+            log.info("Processing create subscription request, request = {}", Json.toString(subscriptionRequest));
             SubscriptionResponse subscriptionResponse =  subscriptionService.createSubscription(subscriptionRequest);
-            log.info(Json.toString(subscriptionResponse));
+            log.info("Successfully processing request, response = {}", Json.toString(subscriptionResponse));
             return subscriptionService.createSubscription(subscriptionRequest);
+        } catch (InvalidArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Argument is invalid");
+        } catch (InvalidDateRangeException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Date range is invalid");
         } catch (Exception e){
-            log.error("error", e);
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid page number or size");
         }
     }
 
     public void validateSubscriptionRequest(SubscriptionRequest subscriptionRequest) throws InvalidArgumentException {
         if (ValidationUtil.isStringEmpty(subscriptionRequest.getSubscriptionType())){
+            throw new InvalidArgumentException();
+        }
+
+        if (!Constants.SubscriptionType.isSubscriptionTypeValid(subscriptionRequest.getSubscriptionType())){
             throw new InvalidArgumentException();
         }
 
@@ -58,15 +64,23 @@ public class SubscriptionController {
         }
 
         if (DateUtil.calculateDurationBetweenDates(subscriptionRequest.getStartDate(), subscriptionRequest.getEndDate()) > Constants.INVOICE_MAX_DATE_RANGE){
-            log.info(String.valueOf(DateUtil.calculateDurationBetweenDates(subscriptionRequest.getStartDate(), subscriptionRequest.getEndDate())));
             throw new InvalidDateRangeException();
         }
 
-        if (ValidationUtil.isStringEmpty(subscriptionRequest.getAmount().getCurrency())){
+        if (subscriptionRequest.getAmount() == null ||
+                ValidationUtil.isStringEmpty(subscriptionRequest.getAmount().getCurrency())){
             throw new InvalidArgumentException();
         }
 
         if (ValidationUtil.isLongValueEmpty(subscriptionRequest.getAmount().getValue())){
+            throw new InvalidArgumentException();
+        }
+
+        if (!Constants.Currency.isCurrencyTypeValid(subscriptionRequest.getAmount().getCurrency())){
+            throw new InvalidArgumentException();
+        }
+
+        if (!Constants.SubCurrency.isSubCurrencyTypeValid(subscriptionRequest.getAmount().getSubCurrency())){
             throw new InvalidArgumentException();
         }
     }
