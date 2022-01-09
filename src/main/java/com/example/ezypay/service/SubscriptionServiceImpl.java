@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService{
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Override
     public SubscriptionResponse createSubscription(SubscriptionRequest subscriptionRequest) {
