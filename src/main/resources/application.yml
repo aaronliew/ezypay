@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/ezypay_management_system
+    username: admin
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    url: jdbc:mariadb://localhost:3306/ezypay_management_system
+    user: admin
+    password: password
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  error:
+    include-stacktrace: never
